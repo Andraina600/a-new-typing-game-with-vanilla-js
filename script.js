@@ -7,7 +7,7 @@
  */
 let startTime = null, previousEndTime = null;
 let currentWordIndex = 0;
-const max_words = 2;
+const max_words = 10;
 const wordsToType = [];
 
 const modeSelect = document.getElementById("mode");
@@ -35,7 +35,7 @@ const getRandomWord = (mode) => {
     const wordList = words[mode];
     return wordList[Math.floor(Math.random() * wordList.length)];
 };
-
+// chronometre
 const update_chrono = () => {
     initial_chrono ++
     let minute = Math.floor(initial_chrono / 60)
@@ -71,7 +71,7 @@ const startTest = (wordCount = max_words) => {
     wordsToType.forEach((word, index) => {
         const span = document.createElement("span");
         span.textContent = word + " ";
-        if (index === 0) span.style.color = "red"; // Highlight first word
+        if (index === 0) span.style.color = "pink"; // Highlight first word
         wordDisplay.appendChild(span);
     });
     inputField.value = "";
@@ -131,7 +131,7 @@ const getCurrentStats = () => {
 
 // Move to the next word and update stats only on spacebar press
 const updateWord = (event) => {
-    if (event.key === " ") { // Check if spacebar is pressed
+    if (event.key === " " && inputField.value.length === wordsToType[currentWordIndex].length) { // Check if spacebar is pressed
         if (true) /*(inputField.value.trim() === wordsToType[currentWordIndex])*/ {
             if (!previousEndTime) previousEndTime = startTime;
             const { wpm, accuracy, error } = getCurrentStats();
@@ -162,7 +162,7 @@ const highlightNextWord = () => {
         if (currentWordIndex > 0) {
             wordElements[currentWordIndex - 1].style.color = "black";
         }
-        wordElements[currentWordIndex].style.color = "red";
+        wordElements[currentWordIndex].style.color = "pink";
     }
 };
 
