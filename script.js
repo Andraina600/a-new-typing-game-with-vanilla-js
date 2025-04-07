@@ -7,7 +7,7 @@
  */
 let startTime = null, previousEndTime = null;
 let currentWordIndex = 0;
-const max_words = 2;
+const max_words = 10;
 const wordsToType = [];
 
 const modeSelect = document.getElementById("mode");
