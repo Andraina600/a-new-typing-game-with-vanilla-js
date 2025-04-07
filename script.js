@@ -90,7 +90,7 @@ const fn_set_limit_input = (limit) => {
 
 // fonction accuracy en fonction nbre de mot correct bien positionné
 const fn_acc = () => {
-    let pt = 0
+    let correct = 0
     let err = 0
     let len_val_input = inputField.value.length
     let len_word = wordsToType[currentWordIndex].length
@@ -98,7 +98,7 @@ const fn_acc = () => {
         //diviseur = len_val_input
         inputField.value.split("").forEach((letter, index) => {
             if(wordsToType[currentWordIndex][index] === letter)
-                pt++
+                correct++
             else
                 err++
         })
@@ -107,13 +107,13 @@ const fn_acc = () => {
         //diviseur = len_word
         wordsToType[currentWordIndex].split("").forEach((letter, index) => {
             if(inputField.value[index] === letter)
-                pt++
+                correct++
             else
                 err++
          })
     }
     
-    return [pt / len_word, err]
+    return [correct / len_word, err]
 }
    
 
