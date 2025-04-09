@@ -1,184 +1,217 @@
-/**
- * Point culture (en Français car je suis un peu obligé): 
- * Dans ce genre de jeu, un mot equivaut a 5 caractères, y compris les espaces. 
- * La precision, c'est le pourcentage de caractères tapées correctement sur toutes les caractères tapées.
- * 
- * Sur ce... Amusez-vous bien ! 
- */
-let startTime = null, previousEndTime = null;
-let currentWordIndex = 0;
-const max_words = 10;
-const wordsToType = [];
+const customButton = document.querySelector('.custom-settings__button');
+const customMenu = document.querySelector('.custom-settings__menu');
 
-const modeSelect = document.getElementById("mode");
+const chronoSelect = document.getElementById("chrono-select");
+const numberToggle = document.getElementById("numbers-toggle");
+const punctuationToggle = document.getElementById("ponctuation-toggle");
+const levelSelect = document.getElementById("level-select");
+const hardcoreToggle = document.getElementById("hardcore-toggle");
+const languageSelect = document.getElementById("language-select");
+const wordCountInput = document.querySelector('.custom-settings__option input');
+
+const modeSelect = levelSelect; // alias
 const wordDisplay = document.getElementById("word-display");
 const inputField = document.getElementById("input-field");
 const results = document.getElementById("results");
-const chrono = document.getElementById("chrono")
+const chrono = document.getElementById("chrono");
 
-let premier_appuie = false
-let initial_chrono = 0
-let inter
-let accum_wpm = 0
-let accum_accuracy = 0
-let accum_error = 0
+let premier_appuie = false;
+let initial_chrono = 0;
+let inter;
+let accum_wpm = 0;
+let accum_accuracy = 0;
+let accum_error = 0;
+
+let startTime = null, previousEndTime = null;
+let currentWordIndex = 0;
+let wordsToType = [];
 
 
-const words = {
+// ========== TOGGLE MENU ==========
+customButton.addEventListener('click', () => {
+  customMenu.classList.toggle('hidden');
+});
+
+
+// ========== DICTIONNAIRES ==========
+const wordBank = {
+  en: {
     easy: ["apple", "banana", "grape", "orange", "cherry"],
     medium: ["keyboard", "monitor", "printer", "charger", "battery"],
     hard: ["synchronize", "complicated", "development", "extravagant", "misconception"]
+  },
+  fr: {
+    easy: ["pomme", "banane", "raisin", "orange", "mangue"],
+    medium: ["ordinateur", "souris", "jardin", "voiture", "bouteille"],
+    hard: ["synchronisation", "développement", "philosophie", "université", "exagération"]
+  },
+  es: {
+    easy: ["gato", "leche", "pan", "libro", "sol"],
+    medium: ["ordenador", "ventana", "jardin", "coche", "botella"],
+    hard: ["sincronizar", "desarrollo", "universidad", "exageración", "filosofía"]
+  },
+  numbers: ["12", "37", "401", "7", "98", "234"],
+  punctuation: [",", ".", "!", "?", ":", ";", "*", "#", "{", "}"]
 };
 
-// Generate a random word from the selected mode
-const getRandomWord = (mode) => {
-    const wordList = words[mode];
-    return wordList[Math.floor(Math.random() * wordList.length)];
-};
-// chronometre
+
+// ========== CHRONO ==========
 const update_chrono = () => {
-    initial_chrono ++
-    let minute = Math.floor(initial_chrono / 60)
-    let second = initial_chrono % 60
-
-    chrono.innerHTML = `${minute}m:${second}s`
-}
+  initial_chrono++;
+  let minute = Math.floor(initial_chrono / 60);
+  let second = initial_chrono % 60;
+  chrono.innerHTML = `${minute}m:${second}s`;
+};
 
 const start_chrono = () => {
-    inter = setInterval(update_chrono, 1000)
-}
+  inter = setInterval(update_chrono, 1000);
+};
 
 const stop_chrono = () => {
-    clearInterval(inter)
-}
-
-// Initialize the typing test
-const startTest = (wordCount = max_words) => {
-    wordsToType.length = 0; // Clear previous words
-    wordDisplay.innerHTML = ""; // Clear display
-    chrono.innerHTML = "00m:00s"
-    currentWordIndex = 0;
-    startTime = null;
-    previousEndTime = null;
-    accum_accuracy = 0
-    accum_error = 0
-    accum_wpm = 0
-
-    for (let i = 0; i < wordCount; i++) {
-        wordsToType.push(getRandomWord(modeSelect.value));
-    }
-
-    wordsToType.forEach((word, index) => {
-        const span = document.createElement("span");
-        span.textContent = word + " ";
-        if (index === 0) span.style.color = "pink"; // Highlight first word
-        wordDisplay.appendChild(span);
-    });
-    inputField.value = "";
-    results.textContent = "";
+  clearInterval(inter);
 };
 
-// Start the timer when user begins typing
-const startTimer = () => {
-    if (!startTime) startTime = Date.now();
+
+// ========== WORD GENERATION ==========
+const getRandomWord = (lang, level, useNumbers, usePunctuation) => {
+  const base = [...wordBank[lang][level]];
+  if (useNumbers) base.push(...wordBank.numbers);
+  if (usePunctuation) base.push(...wordBank.punctuation);
+  return base[Math.floor(Math.random() * base.length)];
 };
 
-// Limitation input en fonction mot à  taper
-const fn_set_limit_input = (limit) => {
-    inputField.setAttribute('maxlength', limit)
-}
 
-// fonction accuracy en fonction nbre de mot correct bien positionné
+// ========== ACCURACY ==========
 const fn_acc = () => {
-    let correct = 0
-    let err = 0
-    let len_val_input = inputField.value.length
-    let len_word = wordsToType[currentWordIndex].length
-    if (Math.min([len_val_input, len_word]) === len_val_input) {
-        //diviseur = len_val_input
-        inputField.value.split("").forEach((letter, index) => {
-            if(wordsToType[currentWordIndex][index] === letter)
-                correct++
-            else
-                err++
-        })
-    }
-    else {
-        //diviseur = len_word
-        wordsToType[currentWordIndex].split("").forEach((letter, index) => {
-            if(inputField.value[index] === letter)
-                correct++
-            else
-                err++
-         })
-    }
-    
-    return [correct / len_word, err]
-}
-   
+  let correct = 0;
+  let err = 0;
+  let input = inputField.value;
+  let target = wordsToType[currentWordIndex];
 
-// Calculate and return WPM & accuracy
+  for (let i = 0; i < target.length; i++) {
+    if (input[i] === target[i]) correct++;
+    else if (input[i]) err++;
+  }
 
+  return [correct / target.length, err];
+};
+
+
+// ========== STATS ==========
 const getCurrentStats = () => {
-    acc_err = fn_acc()
-    const elapsedTime = (Date.now() - previousEndTime) / 1000; // Seconds
-    const wpm = (wordsToType[currentWordIndex].length / 5) / (elapsedTime / 60); // 5 chars = 1 word
-    const accuracy = acc_err[0] * 100; //(wordsToType[currentWordIndex].length / inputField.value.length) * 100;
-    const err = acc_err[1]
-    return { wpm: wpm, accuracy: accuracy, error: err};
-    
+  const [accRatio, err] = fn_acc();
+  const elapsedTime = (Date.now() - previousEndTime) / 1000;
+  const wpm = (wordsToType[currentWordIndex].length / 5) / (elapsedTime / 60);
+  const accuracy = accRatio * 100;
+  return { wpm, accuracy, error: err };
 };
 
-// Move to the next word and update stats only on spacebar press
-const updateWord = (event) => {
-    if (event.key === " " && inputField.value.length === wordsToType[currentWordIndex].length) { // Check if spacebar is pressed
-        if (true) /*(inputField.value.trim() === wordsToType[currentWordIndex])*/ {
-            if (!previousEndTime) previousEndTime = startTime;
-            const { wpm, accuracy, error } = getCurrentStats();
-            accum_wpm += wpm
-            accum_accuracy += accuracy
-            accum_error += error
 
-            currentWordIndex++;
-            previousEndTime = Date.now();
-            highlightNextWord();
-
-            inputField.value = ""; // Clear input field after space
-            event.preventDefault(); // Prevent adding extra spaces
-
-            if (currentWordIndex === wordsToType.length) {
-                stop_chrono()
-                results.textContent = `WPM: ${(accum_wpm / max_words).toFixed(2)}, Accuracy: ${(accum_accuracy / max_words).toFixed(2)}%, Error: ${accum_error}`;
-            }
-        }
-    }
-};
-
-// Highlight the current word in red
+// ========== HIGHLIGHT ==========
 const highlightNextWord = () => {
-    const wordElements = wordDisplay.children;
-
-    if (currentWordIndex < wordElements.length) {
-        if (currentWordIndex > 0) {
-            wordElements[currentWordIndex - 1].style.color = "black";
-        }
-        wordElements[currentWordIndex].style.color = "pink";
+  const wordElements = wordDisplay.children;
+  if (currentWordIndex < wordElements.length) {
+    if (currentWordIndex > 0) {
+      wordElements[currentWordIndex - 1].style.color = "black";
     }
+    wordElements[currentWordIndex].style.color = "pink";
+  }
 };
 
-// Event listeners
-// Attach `updateWord` to `keydown` instead of `input`
-inputField.addEventListener("keydown", (event) => {
-    startTimer();
-    updateWord(event);
-    fn_set_limit_input(wordsToType[currentWordIndex].length)
-    if(!premier_appuie){
-        start_chrono()
-        premier_appuie = true
-    }
-        
-});
-modeSelect.addEventListener("change", () => startTest());
 
-// Start the test
+// ========== TEST INIT ==========
+const startTest = () => {
+  // lecture des options
+  const lang = languageSelect.value;
+  const level = levelSelect.value;
+  const wordCount = parseInt(wordCountInput.value) || 10;
+  const useNumbers = numberToggle.checked;
+  const usePunctuation = punctuationToggle.checked;
+
+  wordsToType = [];
+  wordDisplay.innerHTML = "";
+  chrono.innerHTML = "00m:00s";
+  currentWordIndex = 0;
+  startTime = null;
+  previousEndTime = null;
+  accum_accuracy = 0;
+  accum_error = 0;
+  accum_wpm = 0;
+  premier_appuie = false;
+  inputField.value = "";
+  results.textContent = "";
+
+  for (let i = 0; i < wordCount; i++) {
+    wordsToType.push(getRandomWord(lang, level, useNumbers, usePunctuation));
+  }
+
+  wordsToType.forEach((word, index) => {
+    const span = document.createElement("span");
+    span.textContent = word + " ";
+    if (index === 0) span.style.color = "pink";
+    wordDisplay.appendChild(span);
+  });
+};
+
+
+// ========== INPUT LOGIC ==========
+const updateWord = (event) => {
+  const isHardcore = hardcoreToggle.checked;
+
+  if (event.key === " ") {
+    const [acc, err] = fn_acc();
+
+    if (isHardcore && err > 0) {
+      stop_chrono();
+      results.textContent = "❌ Game Over - Hardcore mode";
+      inputField.disabled = true;
+      return;
+    }
+
+    if (!previousEndTime) previousEndTime = startTime;
+    const { wpm, accuracy, error } = getCurrentStats();
+    accum_wpm += wpm;
+    accum_accuracy += accuracy;
+    accum_error += error;
+
+    currentWordIndex++;
+    previousEndTime = Date.now();
+    highlightNextWord();
+    inputField.value = "";
+    event.preventDefault();
+
+    if (currentWordIndex === wordsToType.length) {
+      stop_chrono();
+      results.textContent = `WPM: ${(accum_wpm / wordsToType.length).toFixed(2)}, Accuracy: ${(accum_accuracy / wordsToType.length).toFixed(2)}%, Errors: ${accum_error}`;
+    }
+  }
+};
+
+
+// ========== EVENTS ==========
+inputField.addEventListener("keydown", (event) => {
+  if (!startTime) startTime = Date.now();
+  if (!premier_appuie) {
+    start_chrono();
+    premier_appuie = true;
+  }
+  updateWord(event);
+});
+
+chronoSelect.addEventListener("change", () => {
+  // Pour l'instant, tu peux ignorer le chrono basé sur le temps si tu n'as pas fini cette logique
+});
+
+languageSelect.addEventListener("change", startTest);
+levelSelect.addEventListener("change", startTest);
+wordCountInput.addEventListener("change", startTest);
+numberToggle.addEventListener("change", startTest);
+punctuationToggle.addEventListener("change", startTest);
+hardcoreToggle.addEventListener("change", () => {
+  inputField.disabled = false;
+  startTest();
+});
+
+
+// ========== INITIAL ==========
 startTest();

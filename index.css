@@ -1,0 +1,202 @@
+body {
+    background-color: #363636;
+}
+
+/* Structure générale du bloc custom */
+.custom-settings {
+    position: relative;
+    display: inline-block;
+}
+  
+  /* Bouton custom */
+.custom-settings__button {
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+  
+  /* Menu déroulant */
+.custom-settings__menu {
+    background-color: #575757;
+    color: white;
+    font-size: 13px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    position: absolute;
+    top: 110%;
+    left: 0;
+    min-width: 200px;
+    padding: 12px;
+    border-radius: 12px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+  
+  /* Option dans le menu */
+.custom-settings__option {
+    display: flex;
+    flex-direction: column;
+}
+
+.custom-settings__option option {
+    color: rgb(82, 82, 82);
+}
+  
+  /* Cacher l’élément (état par défaut) */
+.hidden {
+    display: none;
+}
+  
+  /* Style optionnel pour les inputs */
+.custom-settings__option input,
+.custom-settings__option select {
+    margin-top: 4px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: none;
+    font-size: 0.9rem;
+}
+  
+/* ---------- pour mes typing-options en général ------------ */
+.typing-options {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 5px;
+    color: white;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 13px;
+}
+
+.select-group select option {
+    color: rgb(82, 82, 82);;
+    background-color: white;
+}
+
+#typing-options__toggle {
+    display: inherit;
+    background-color: #575757;
+    border-radius: 10px;
+    height: 5vh;
+    padding-inline: 20px;
+    align-items: center;
+    gap: 10px;
+}
+
+.select-group {
+    display: flex;
+    gap: 10px;
+    background-color: #575757;
+    border-radius: 10px;
+    padding-inline: 20px;
+    align-items: center;
+    align-content: center;
+    height: 5vh;
+    color: white;
+}
+
+#chrono-select, #level-select {
+    background-color: #939393;
+    border-radius: 10px;
+} 
+
+.custom-settings__button {
+    display: flex;
+    background-color: #575757;
+    padding-inline: 20px;
+    height: 5vh;
+    align-items: center;
+    color: white;
+    font-size: 13px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+/* ------------pour l'identité de mon site [logo + nom]------------*/
+.site-identity h1 {
+    color: white;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 3rem;
+}
+
+.site-identity h1 span {
+    color: #F1008A;
+    font-size: 4rem;
+}
+
+.site-identity {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#site-identity__logo {
+    width: 10%;
+}
+
+/*------------------ pour le texte à taper ---------------*/
+#word-display {
+  display: flex;
+  gap: 5px;
+  color: #898989;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;          
+  padding-inline: 10%;
+  box-sizing: border-box;
+  text-align: left;
+  font-size: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.text {
+  padding-block: 2%;
+}
+
+/*-------------- pour l'input qu'on va mettre les mots à taper + chrono + result ---------------*/
+.typing-zone {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+#input-field {
+  width: 25vw;
+  padding-block: 10px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  padding-left: 10px;
+}
+
+.chrono {
+  background-color: black;
+  padding-inline: 10px;
+  color: white;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.result {
+  display: flex;
+  justify-content: center;
+}
+
+.result p {
+  color: #898989
+}
+
+/* surplus de css avec les fonctionnalités : chrono, level ... -------- */
+#chrono-select option, #language-select option, #level-select option{
+  background-color: #ffe4f4;
+}
+
+.custom-settings__menu {
+  background-color: #4a4a4a;
+}
+
+.custom-settings__button:hover {
+  background-color: #F1008A;
+}
