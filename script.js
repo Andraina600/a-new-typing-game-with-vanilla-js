@@ -7,7 +7,7 @@
  */
 let startTime = null, previousEndTime = null;
 let currentWordIndex = 0;
-const max_words = 10;
+const max_words = 3;
 const wordsToType = [];
 
 const modeSelect = document.getElementById("mode");
@@ -15,19 +15,34 @@ const wordDisplay = document.getElementById("word-display");
 const inputField = document.getElementById("input-field");
 const results = document.getElementById("results");
 const chrono = document.getElementById("chrono")
+const minuteur = document.getElementById("minuteur")
 
 let premier_appuie = false
 let initial_chrono = 0
 let inter
+let interval
 let accum_wpm = 0
 let accum_accuracy = 0
 let accum_error = 0
+let accum_correct = 0
+let accum_NumberChar = 0
 
 
 const words = {
-    easy: ["apple", "banana", "grape", "orange", "cherry"],
-    medium: ["keyboard", "monitor", "printer", "charger", "battery"],
-    hard: ["synchronize", "complicated", "development", "extravagant", "misconception"]
+    easy: ["dog", "chases", "ball", "the", "big", "quickly", "and", "in", "park", "my", "friend",
+         "reads", "book", "under", "tree", "I", "eat", "apple", "with", "fork", "he", "plays", 
+         "guitar", "at", "home", "she", "drinks", "water", "from", "bottle"],
+    
+    medium: ["keyboard", "monitor", "printer", "charger", "battery" , "journey", "mysterious", 
+        "discover", "mountain", "adventure", "explore", "ancient", "challenge", "whisper", 
+        "travel", "hidden", "distant", "knowledge", "library", "question", "answer", "forest",
+         "meditate", "island", "discover", "treasure", "puzzle", "reflection", "insight", 
+         "beyond", "experience", "unique", "enlightenment", "mystery", "enigma", "understand"],
+    
+    hard: ["synchronize", "complicated", "development", "extravagant", "misconception" , "ephemeral", 
+        "serendipity", "ineffable", "conundrum", "juxtapose", "quixotic", "cogitation", "melancholy", 
+        "antithesis", "cacophony", "inevitable", "luminous", "reverie", "sonder", 
+        "labyrinthine", "euphoria", "nebulous", "paradox"]
 };
 
 // Generate a random word from the selected mode
@@ -51,12 +66,30 @@ const start_chrono = () => {
 const stop_chrono = () => {
     clearInterval(inter)
 }
+//minuteur
+
+let times = 10 
+const update_minuteur = () => {
+    const secd = times % 60
+    minuteur.innerHTML = `${secd}s`
+    times-- 
+    if(times < 0){
+        clearInterval(interval)
+    }
+}
+
+const start_minuteur = () => {
+    interval = setInterval(update_minuteur, 1000)
+}
+
+
 
 // Initialize the typing test
 const startTest = (wordCount = max_words) => {
     wordsToType.length = 0; // Clear previous words
     wordDisplay.innerHTML = ""; // Clear display
     chrono.innerHTML = "00m:00s"
+    minuteur.innerHTML = "10s"
     currentWordIndex = 0;
     startTime = null;
     previousEndTime = null;
@@ -84,9 +117,9 @@ const startTimer = () => {
 };
 
 // Limitation input en fonction mot à  taper
-const fn_set_limit_input = (limit) => {
-    inputField.setAttribute('maxlength', limit)
-}
+// const fn_set_limit_input = (limit) => {
+//     inputField.setAttribute('maxlength', limit)
+// }
 
 // fonction accuracy en fonction nbre de mot correct bien positionné
 const fn_acc = () => {
@@ -94,63 +127,77 @@ const fn_acc = () => {
     let err = 0
     let len_val_input = inputField.value.length
     let len_word = wordsToType[currentWordIndex].length
+    let sum_totale = 0
+
     if (Math.min([len_val_input, len_word]) === len_val_input) {
-        //diviseur = len_val_input
         inputField.value.split("").forEach((letter, index) => {
             if(wordsToType[currentWordIndex][index] === letter)
                 correct++
             else
                 err++
         })
+        sum_totale = correct + err
     }
     else {
-        //diviseur = len_word
         wordsToType[currentWordIndex].split("").forEach((letter, index) => {
             if(inputField.value[index] === letter)
                 correct++
             else
                 err++
          })
-    }
+         sum_totale = correct + err
+    }  
     
-    return [correct / len_word, err]
+    return [correct / len_word, err, correct, sum_totale]
 }
    
 
-// Calculate and return WPM & accuracy
+// Calculate and return WPM & accuracy & error
 
 const getCurrentStats = () => {
     acc_err = fn_acc()
+    acc_correct = fn_acc()
+    acc_NumberChar = fn_acc()
     const elapsedTime = (Date.now() - previousEndTime) / 1000; // Seconds
     const wpm = (wordsToType[currentWordIndex].length / 5) / (elapsedTime / 60); // 5 chars = 1 word
     const accuracy = acc_err[0] * 100; //(wordsToType[currentWordIndex].length / inputField.value.length) * 100;
     const err = acc_err[1]
-    return { wpm: wpm, accuracy: accuracy, error: err};
+    const correct = acc_correct[2]
+    const NumberChar = acc_NumberChar[3]
+    return { wpm: wpm, accuracy: accuracy, error: err, correct: correct , totale: NumberChar};
     
 };
 
 // Move to the next word and update stats only on spacebar press
 const updateWord = (event) => {
-    if (event.key === " " && inputField.value.length === wordsToType[currentWordIndex].length) { // Check if spacebar is pressed
-        if (true) /*(inputField.value.trim() === wordsToType[currentWordIndex])*/ {
-            if (!previousEndTime) previousEndTime = startTime;
-            const { wpm, accuracy, error } = getCurrentStats();
-            accum_wpm += wpm
+    if (event.key === " ") { // Check if spacebar is pressed
+        if (true) {
+            if (!previousEndTime) {
+                previousEndTime = startTime
+            };
+            const { wpm, accuracy, error , correct , totale} = getCurrentStats();
+            if(wordsToType[currentWordIndex].length != inputField.value.length){
+                accum_wpm += 0
+            }
+            else{
+                accum_wpm += wpm   
+            }
             accum_accuracy += accuracy
             accum_error += error
+            accum_correct += correct
+            accum_NumberChar += totale
 
-            currentWordIndex++;
+            currentWordIndex++; 
             previousEndTime = Date.now();
             highlightNextWord();
 
-            inputField.value = ""; // Clear input field after space
+            inputField.value += " "; // add space input field after space
             event.preventDefault(); // Prevent adding extra spaces
-
-            if (currentWordIndex === wordsToType.length) {
-                stop_chrono()
-                results.textContent = `WPM: ${(accum_wpm / max_words).toFixed(2)}, Accuracy: ${(accum_accuracy / max_words).toFixed(2)}%, Error: ${accum_error}`;
-            }
         }
+    }
+    if (currentWordIndex === wordsToType.length) {
+        stop_chrono()
+        results.textContent = `WPM: ${Math.floor(accum_wpm / max_words)} , Accuracy: ${Math.floor(accum_accuracy / max_words)}%, Error: ${accum_error}/Correct: ${accum_correct}/Totale: ${accum_NumberChar}`;
     }
 };
 
@@ -171,9 +218,10 @@ const highlightNextWord = () => {
 inputField.addEventListener("keydown", (event) => {
     startTimer();
     updateWord(event);
-    fn_set_limit_input(wordsToType[currentWordIndex].length)
+    //fn_set_limit_input(wordsToType[currentWordIndex].length)
     if(!premier_appuie){
         start_chrono()
+        start_minuteur()
         premier_appuie = true
     }
         
