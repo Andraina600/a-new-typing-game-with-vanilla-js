@@ -1,6 +1,10 @@
 const customButton = document.querySelector('.custom-settings__button');
 const customMenu = document.querySelector('.custom-settings__menu');
+const customSettings = document.querySelector('.custom-settings')
 
+const typingToggle1 = document.querySelector(".typing-options__toggle1")
+const typingToggle2 = document.querySelector(".typing-options__toggle2")
+const typingToggle3 = document.querySelector(".typing-options__toggle3")
 const chronoSelect = document.getElementById("chrono-select");
 const numberToggle = document.getElementById("numbers-toggle");
 const punctuationToggle = document.getElementById("ponctuation-toggle");
@@ -34,6 +38,25 @@ let wordsToType = [];
 customButton.addEventListener('click', () => {
   customMenu.classList.toggle('hidden');
 });
+
+customSettings.addEventListener('click', () => {
+    customButton.classList.toggle('custom-settings__button--pink');
+})
+
+numberToggle.addEventListener('change', () => {
+    typingToggle1.classList.toggle('typing-options__toggle--pink');
+})
+
+punctuationToggle.addEventListener('change', () => {
+    typingToggle2.classList.toggle('typing-options__toggle--pink');
+})
+
+hardcoreToggle.addEventListener('change', () => {
+    typingToggle3.classList.toggle('typing-options__toggle--pink');
+})
+
+
+
 
 
 // ========== DICTIONNAIRES ==========
@@ -130,13 +153,16 @@ const getCurrentStats = () => {
 
 
 // ========== HIGHLIGHT ==========
+let r = 241
+let g = 0
+let b = 138
 const highlightNextWord = () => {
     const wordElements = wordDisplay.children;
     if (currentWordIndex < wordElements.length) {
         if (currentWordIndex > 0) {
         wordElements[currentWordIndex - 1].style.color = "black";
         }
-        wordElements[currentWordIndex].style.color = "pink";
+        wordElements[currentWordIndex].style.color = "pink" ;
     }
 };
 
@@ -167,6 +193,7 @@ const startTest = () => {
     for (let i = 0; i < wordCount; i++) {
         wordsToType.push(getRandomWord(lang, level, useNumbers, usePunctuation));
     }
+    
 
     wordsToType.forEach((word, index) => {
         const span = document.createElement("span");
@@ -198,7 +225,7 @@ const updateWord = (event) => {
         currentWordIndex++;
         previousEndTime = Date.now();
         highlightNextWord();
-        inputField.value = "";
+        inputField.value += " ";
         event.preventDefault();
 
         if (currentWordIndex === wordsToType.length) {
