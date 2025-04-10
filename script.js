@@ -1,6 +1,10 @@
 const customButton = document.querySelector('.custom-settings__button');
 const customMenu = document.querySelector('.custom-settings__menu');
+const customSettings = document.querySelector('.custom-settings')
 
+const typingToggle1 = document.querySelector(".typing-options__toggle1")
+const typingToggle2 = document.querySelector(".typing-options__toggle2")
+const typingToggle3 = document.querySelector(".typing-options__toggle3")
 const chronoSelect = document.getElementById("chrono-select");
 const numberToggle = document.getElementById("numbers-toggle");
 const punctuationToggle = document.getElementById("ponctuation-toggle");
@@ -10,32 +14,62 @@ const languageSelect = document.getElementById("language-select");
 const wordCountInput = document.querySelector('.custom-settings__option input');
 
 const modeSelect = levelSelect;
-const modeChrono = chronoSelect;
 const wordDisplay = document.getElementById("word-display");
+const restDisplay = document.getElementById("restant-display");
 const inputField = document.getElementById("input-field");
 const results = document.getElementById("results");
 const chrono = document.getElementById("chrono");
 
+let restant = 0
+let highlight_index = 0;
 let isHardcore = false;
 let premier_appuie = false;
 let initial_chrono = 0;
 let inter;
-let interval;
 let accum_wpm = 0;
 let accum_accuracy = 0;
 let accum_error = 0;
 let accum_correct = 0;
 let accum_totale = 0;
+let List_number = 10
 
 let startTime = null, previousEndTime = null;
 let currentWordIndex = 0;
 let wordsToType = [];
 
 
+function range(list, start, end, step = 1) {
+    const result = [];
+    for (let i = start; i < end; i += step) {
+      result.push(list[i]);
+    }
+    return result;
+}
+  
+
 // ========== TOGGLE MENU ==========
 customButton.addEventListener('click', () => {
-    customMenu.classList.toggle('hidden');
+  customMenu.classList.toggle('hidden');
 });
+
+customSettings.addEventListener('click', () => {
+    customButton.classList.toggle('custom-settings__button--pink');
+})
+
+numberToggle.addEventListener('change', () => {
+    typingToggle1.classList.toggle('typing-options__toggle--pink');
+})
+
+punctuationToggle.addEventListener('change', () => {
+    typingToggle2.classList.toggle('typing-options__toggle--pink');
+})
+
+hardcoreToggle.addEventListener('change', () => {
+    typingToggle3.classList.toggle('typing-options__toggle--pink');
+})
+
+
+
 
 
 // ========== DICTIONNAIRES ==========
@@ -132,19 +166,18 @@ const getCurrentStats = () => {
 
 
 // ========== HIGHLIGHT ==========
-const highlightNextWord = () => {
+const highlightNextWord = (index) => {
     const wordElements = wordDisplay.children;
-    if (currentWordIndex < wordElements.length) {
-        if (currentWordIndex > 0) {
-        wordElements[currentWordIndex - 1].style.color = "black";
+    if (index < wordElements.length) {
+        if (index > 0) {
+        wordElements[index - 1].style.color = "black";
         }
-        wordElements[currentWordIndex].style.color = "pink";
+        wordElements[index].style.color = "pink" ;
     }
 };
 
 
-// ========== TEST ==========
-let times = parseInt(chronoSelect.value); 
+// ========== TEST INIT ==========
 const startTest = () => {
     const lang = languageSelect.value;
     const level = levelSelect.value;
@@ -152,16 +185,10 @@ const startTest = () => {
     const useNumbers = numberToggle.checked;
     const usePunctuation = punctuationToggle.checked;
 
-    update_minuteur();
+    
     wordsToType.length = 0;
     wordDisplay.innerHTML = "";
-    //chrono.innerHTML = `00m:${times}s`
-    // if(chronoSelect){
-    //     chrono.innerHTML = `00m:${times}s`;
-    // }
-    // else{
-    //     chrono.innerHTML = "00m00s";
-    // }
+    chrono.innerHTML = "00m:00s";
     currentWordIndex = 0;
     startTime = null;
     previousEndTime = null;
@@ -177,16 +204,40 @@ const startTest = () => {
         wordsToType.push(getRandomWord(lang, level, useNumbers, usePunctuation));
     }
 
+    restant = wordsToType.length - (currentWordIndex)
+    restDisplay.innerHTML = restant
+    
+
     wordsToType.forEach((word, index) => {
-        const span = document.createElement("span");
-        span.textContent = word + " ";
-        if (index === 0) span.style.color = "pink";
-        wordDisplay.appendChild(span);
+        // atao variable le 10
+        if(index < List_number) {
+            const span = document.createElement("span");
+            span.textContent = word + " ";
+            if (index === 0) span.style.color = "pink";
+            wordDisplay.appendChild(span);
+        } 
+            
     });
 };
 
 
-// ========== INPUT ==========
+const update_wordDisplay = (index)=> {
+    // atao variable le 10
+    new_word_display = range(wordsToType, index, index + List_number, 1)
+    wordDisplay.innerHTML = "";
+    new_word_display.forEach((word, index) => {
+        if (word !== undefined){
+            const span = document.createElement("span");
+            span.textContent = word + " ";
+            if (index === 0) span.style.color = "pink";
+            wordDisplay.appendChild(span);
+        }
+            
+            
+    });
+};
+
+// ========== INPUT LOGIC ==========
 
 const updateWord = (event) => {
    
@@ -205,15 +256,24 @@ const updateWord = (event) => {
         accum_totale += totale
         
         currentWordIndex++;
+        highlight_index ++;
+        // atao variable le 10
+        if (currentWordIndex % List_number === 0 &&  currentWordIndex != wordsToType.length){
+            update_wordDisplay(currentWordIndex)
+            highlight_index = 0
+        }
+        restant = wordsToType.length - (currentWordIndex)
+        restDisplay.innerHTML = restant
+
         previousEndTime = Date.now();
-        highlightNextWord();
+        highlightNextWord(highlight_index);
         inputField.value = "";
         event.preventDefault();
 
         if (currentWordIndex === wordsToType.length) {
-            stop_chrono();
-            results.textContent = `WPM: ${Math.floor(accum_wpm / wordsToType.length)}, Accuracy: ${Math.floor(accum_accuracy / wordsToType.length)}%
-            , Errors: ${accum_error}/Correct: ${accum_correct}/Totale: ${accum_totale}`;
+        stop_chrono();
+        results.textContent = `WPM: ${Math.floor(accum_wpm / wordsToType.length)}, Accuracy: ${Math.floor(accum_accuracy / wordsToType.length)}%
+        , Errors: ${accum_error}/Correct: ${accum_correct}/Totale: ${accum_totale}`;
         }
     }
     
@@ -223,14 +283,13 @@ const updateWord = (event) => {
 // ========== EVENTS ==========
 inputField.addEventListener("keydown", (event) => {
     if (!startTime) startTime = Date.now();
-    if (chronoSelect) {
-        start_minuteur();
+    if (!premier_appuie) {
+        start_chrono();
+        premier_appuie = true;
     }
-    if(!premier_appuie){
-        //start_chrono();
-        premier_appuie = true
-    }
+    
     const typed = inputField.value
+    console.log(typed)
     if(isHardcore){
         for(let i = 0 ; i < typed.length ; i++){
             if(typed[i] != wordsToType[currentWordIndex][i]){
@@ -246,21 +305,21 @@ inputField.addEventListener("keydown", (event) => {
 });
 
 //========== MINUTEUR ===========
-const update_minuteur = () => {
-    const secd = times % 60
-    chrono.innerHTML = `00m:${secd}s`
-    times-- 
-    if(secd < 0){
-        clearInterval(interval)
-        return
+chronoSelect.addEventListener("change", () => {
+    const update_minuteur = () => {
+        const secd = times % 60
+        minuteur.innerHTML = `${secd}s`
+        times-- 
+        if(times < 0){
+            clearInterval(interval)
+        }
     }
-}
+    
+    const start_minuteur = () => {
+        interval = setInterval(update_minuteur, 1000)
+    }
+});
 
-const start_minuteur = () => {
-    interval = setInterval(update_minuteur, 1000)
-}
-
-chronoSelect.addEventListener("change" , startTest);
 languageSelect.addEventListener("change", startTest);
 levelSelect.addEventListener("change", startTest);
 wordCountInput.addEventListener("change", startTest);
@@ -273,4 +332,5 @@ hardcoreToggle.addEventListener("change", () => {
 });
 
 
+// ========== INITIAL ==========
 startTest();
