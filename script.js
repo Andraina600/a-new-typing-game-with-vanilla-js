@@ -10,6 +10,7 @@ const languageSelect = document.getElementById("language-select");
 const wordCountInput = document.querySelector('.custom-settings__option input');
 
 const modeSelect = levelSelect;
+const modeChrono = chronoSelect;
 const wordDisplay = document.getElementById("word-display");
 const inputField = document.getElementById("input-field");
 const results = document.getElementById("results");
@@ -19,6 +20,7 @@ let isHardcore = false;
 let premier_appuie = false;
 let initial_chrono = 0;
 let inter;
+let interval;
 let accum_wpm = 0;
 let accum_accuracy = 0;
 let accum_error = 0;
@@ -32,7 +34,7 @@ let wordsToType = [];
 
 // ========== TOGGLE MENU ==========
 customButton.addEventListener('click', () => {
-  customMenu.classList.toggle('hidden');
+    customMenu.classList.toggle('hidden');
 });
 
 
@@ -141,7 +143,8 @@ const highlightNextWord = () => {
 };
 
 
-// ========== TEST INIT ==========
+// ========== TEST ==========
+let times = parseInt(chronoSelect.value); 
 const startTest = () => {
     const lang = languageSelect.value;
     const level = levelSelect.value;
@@ -149,10 +152,16 @@ const startTest = () => {
     const useNumbers = numberToggle.checked;
     const usePunctuation = punctuationToggle.checked;
 
-
+    update_minuteur();
     wordsToType.length = 0;
     wordDisplay.innerHTML = "";
-    chrono.innerHTML = "00m:00s";
+    //chrono.innerHTML = `00m:${times}s`
+    // if(chronoSelect){
+    //     chrono.innerHTML = `00m:${times}s`;
+    // }
+    // else{
+    //     chrono.innerHTML = "00m00s";
+    // }
     currentWordIndex = 0;
     startTime = null;
     previousEndTime = null;
@@ -177,7 +186,7 @@ const startTest = () => {
 };
 
 
-// ========== INPUT LOGIC ==========
+// ========== INPUT ==========
 
 const updateWord = (event) => {
    
@@ -202,9 +211,9 @@ const updateWord = (event) => {
         event.preventDefault();
 
         if (currentWordIndex === wordsToType.length) {
-        stop_chrono();
-        results.textContent = `WPM: ${Math.floor(accum_wpm / wordsToType.length)}, Accuracy: ${Math.floor(accum_accuracy / wordsToType.length)}%
-        , Errors: ${accum_error}/Correct: ${accum_correct}/Totale: ${accum_totale}`;
+            stop_chrono();
+            results.textContent = `WPM: ${Math.floor(accum_wpm / wordsToType.length)}, Accuracy: ${Math.floor(accum_accuracy / wordsToType.length)}%
+            , Errors: ${accum_error}/Correct: ${accum_correct}/Totale: ${accum_totale}`;
         }
     }
     
@@ -214,9 +223,12 @@ const updateWord = (event) => {
 // ========== EVENTS ==========
 inputField.addEventListener("keydown", (event) => {
     if (!startTime) startTime = Date.now();
-    if (!premier_appuie) {
-        start_chrono();
-        premier_appuie = true;
+    if (chronoSelect) {
+        start_minuteur();
+    }
+    if(!premier_appuie){
+        //start_chrono();
+        premier_appuie = true
     }
     const typed = inputField.value
     if(isHardcore){
@@ -234,21 +246,21 @@ inputField.addEventListener("keydown", (event) => {
 });
 
 //========== MINUTEUR ===========
-chronoSelect.addEventListener("change", () => {
-    const update_minuteur = () => {
-        const secd = times % 60
-        minuteur.innerHTML = `${secd}s`
-        times-- 
-        if(times < 0){
-            clearInterval(interval)
-        }
+const update_minuteur = () => {
+    const secd = times % 60
+    chrono.innerHTML = `00m:${secd}s`
+    times-- 
+    if(secd < 0){
+        clearInterval(interval)
+        return
     }
-    
-    const start_minuteur = () => {
-        interval = setInterval(update_minuteur, 1000)
-    }
-});
+}
 
+const start_minuteur = () => {
+    interval = setInterval(update_minuteur, 1000)
+}
+
+chronoSelect.addEventListener("change" , startTest);
 languageSelect.addEventListener("change", startTest);
 levelSelect.addEventListener("change", startTest);
 wordCountInput.addEventListener("change", startTest);
@@ -261,5 +273,4 @@ hardcoreToggle.addEventListener("change", () => {
 });
 
 
-// ========== INITIAL ==========
 startTest();
