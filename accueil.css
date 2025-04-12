@@ -1,0 +1,88 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+
+.home {
+    position: relative;
+    z-index: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    gap: 10px;
+    justify-content: center;
+    padding-left: 2.5%;
+}
+  
+.home::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: url("images/gaming_keyboard-1.jpg");
+    background-size: cover;
+    background-position: center;
+    transform: scaleX(-1); 
+    filter: blur(3px);
+    transform: scaleX(-1) scale(1.1);
+    background-color: rgba(108, 108, 108, 0.9); /* voile noir */
+    background-blend-mode: darken; /* fusion avec l'image */
+}
+
+.home__identity p {
+    color: white;
+    font-family: 'Inter', sans-serif;
+    margin-bottom: -4.8%;
+}
+
+.home__identity h1 {
+    color: white;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 4rem;
+    text-shadow: 10px 10px 10px rgb(6, 6, 6);
+    font-family: 'Orbitron', sans-serif;
+}
+
+.home__identity h1 span {
+    color: #F1008A;
+    font-size: 6rem;
+}
+
+.home__slogan p {
+    color: white;
+    font-family: 'Actor', sans-serif;
+    text-shadow: 10px 10px 10px rgb(0, 0, 0);
+}
+  
+button {
+    padding-inline: 25px;
+    padding-block: 14px;
+    border-radius: 40px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    background-color: #F1008A;
+    font-family: 'Inter', sans-serif;
+    font-style: italic;
+    font-size: 1.4rem;
+    box-shadow: 10px 10px 10px rgb(35, 35, 35);
+    font-weight: bolder;
+    transition: transform 0.3s ease;
+}
+
+button:hover {
+    transform: scale(1.09); 
+}
+
+button:active {
+    transform: translateY(4px); 
+}
+
+.home__identity {
+    margin-top: -13%;
+}
+
+.home a {
+    margin-top: 2%;
+}

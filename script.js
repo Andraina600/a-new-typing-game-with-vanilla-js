@@ -19,7 +19,6 @@ const restDisplay = document.getElementById("restant-display");
 const inputField = document.getElementById("input-field");
 const results = document.getElementById("results");
 const chrono = document.getElementById("chrono");
-const refresh = document.getElementById("refresh__icon")
 
 let limit_temps = 0
 let restant = 0
@@ -194,7 +193,7 @@ const highlightNextWord = (index) => {
 const startTest = () => {
     const lang = languageSelect.value;
     const level = levelSelect.value;
-    const wordCount = parseInt(wordCountInput.value) || 10;
+    const wordCount = parseInt(wordCountInput.value) || 30;
     const useNumbers = numberToggle.checked;
     const usePunctuation = punctuationToggle.checked;
 
@@ -321,7 +320,7 @@ inputField.addEventListener("keydown", (event) => {
   updateWord(event);
 });
 
-//========== MINUTEUR ===========
+//========== MINUTEUR =========== //
 chronoSelect.addEventListener("change", () => {
     startTest()
     stop_chrono()

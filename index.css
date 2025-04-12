@@ -1,12 +1,12 @@
 body {
-    background-color: #363636;
+    background-color: #1e1e1e;
 }
 
 /* Structure générale du bloc custom */
 .custom-settings {
     position: relative;
     display: inline-block;
-    box-shadow: 3px 10px 8px rgb(34, 34, 34);
+    box-shadow: 3px 10px 8px rgb(25, 25, 25);
 }
   
   /* Bouton custom */
@@ -80,26 +80,30 @@ body {
 
 .typing-options__toggle1, .typing-options__toggle2, .typing-options__toggle3 {
     display: inherit;
-    background-color: #575757;
+    background-color: #2d2d2d;
     border-radius: 10px;
     height: 5vh;
     padding-inline: 20px;
     align-items: center;
     gap: 10px;
-    box-shadow: 3px 10px 8px rgb(34, 34, 34);
+    box-shadow: 3px 10px 8px rgb(25, 25, 25);
+}
+ 
+.custom-settings__option select{
+  outline: none;
 }
 
 .select-group {
     display: flex;
     gap: 10px;
-    background-color: #575757;
+    background-color: #2d2d2d;
     border-radius: 10px;
     padding-inline: 20px;
     align-items: center;
     align-content: center;
     height: 5vh;
     color: white;
-    box-shadow: 3px 10px 8px rgb(34, 34, 34);
+    box-shadow: 3px 10px 8px rgb(25, 25, 25);
 }
 
 #chrono-select, #level-select {
@@ -110,13 +114,17 @@ body {
 
 .custom-settings__button {
     display: flex;
-    background-color: #575757;
+    background-color: #2d2d2d;
     padding-inline: 20px;
     height: 5vh;
     align-items: center;
     color: white;
     font-size: 13px;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.custom-settings {
+  border-radius: 10px;
 }
 
 .custom-settings__option input {
@@ -128,7 +136,7 @@ body {
     color: white;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 3rem;
-    text-shadow: 10px 10px 8px rgb(0, 0, 0);
+    text-shadow: 10px 10px 8px rgb(15, 15, 15);
 }
 
 .site-identity h1 span {
@@ -180,14 +188,16 @@ body {
   border-bottom-left-radius: 10px;
   padding-left: 10px;
   outline: none;
+  box-shadow: 10px 10px 8px rgb(25, 25, 25);
 }
 
 .chrono {
-  background-color: black;
+  background-color: #F1008A;
   padding-inline: 10px;
   color: white;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
+  box-shadow: 10px 10px 8px rgb(25, 25, 25);
 }
 
 .result {
@@ -217,12 +227,12 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: 2.5%;
 }
 
 .refresh i {
   color: #575757;
   font-size: 1.5rem;
+  cursor: pointer;
 }
 
 /* --- mot restant à taper ---- */
@@ -233,5 +243,4 @@ body {
   font-size: 1.5rem;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: white;
-  margin-top: -2%;
 }
