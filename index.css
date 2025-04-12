@@ -151,6 +151,7 @@ body {
   flex-wrap: wrap;
   justify-content: center;          
   padding-inline: 10%;
+  padding-top: 3%;
   box-sizing: border-box;
   text-align: left;
   font-size: 20px;
@@ -166,6 +167,7 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  margin-top: -3%;
 }
 
 #input-field {
@@ -205,4 +207,16 @@ body {
 
 .custom-settings__button--pink, .typing-options__toggle--pink{
   background-color: #F1008A;
+}
+
+/* --- mode refresh --- */
+.refresh {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.refresh i {
+  color: #575757;
+  font-size: 1.5rem;
 }

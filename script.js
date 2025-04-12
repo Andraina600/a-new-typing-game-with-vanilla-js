@@ -31,7 +31,7 @@ let accum_accuracy = 0;
 let accum_error = 0;
 let accum_correct = 0;
 let accum_totale = 0;
-let List_number = 10
+let List_number = 50;
 
 let startTime = null, previousEndTime = null;
 let currentWordIndex = 0;
@@ -52,7 +52,7 @@ customButton.addEventListener('click', () => {
   customMenu.classList.toggle('hidden');
 });
 
-customSettings.addEventListener('click', () => {
+customButton.addEventListener('click', () => {
     customButton.classList.toggle('custom-settings__button--pink');
 })
 
