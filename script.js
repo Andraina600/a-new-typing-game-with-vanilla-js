@@ -20,6 +20,7 @@ const inputField = document.getElementById("input-field");
 const results = document.getElementById("results");
 const chrono = document.getElementById("chrono");
 
+let limit_temps = 0
 let restant = 0
 let highlight_index = 0;
 let isHardcore = false;
@@ -41,7 +42,7 @@ let wordsToType = [];
 function range(list, start, end, step = 1) {
     const result = [];
     for (let i = start; i < end; i += step) {
-      result.push(list[i]);
+        result.push(list[i]);
     }
     return result;
 }
@@ -96,18 +97,32 @@ const wordBank = {
 
 // ========== CHRONO ==========
 const update_chrono = () => {
-  initial_chrono++;
-  let minute = Math.floor(initial_chrono / 60);
-  let second = initial_chrono % 60;
-  chrono.innerHTML = `${minute}m:${second}s`;
+    if (limit_temps === -99) {
+        initial_chrono++;
+  
+        let minute = Math.floor(initial_chrono / 60);
+        let second = initial_chrono % 60;
+        chrono.innerHTML = `${minute}m:${second}s`;
+    }
+
+    else {
+        initial_chrono++;
+
+        let temp = limit_temps - initial_chrono 
+        
+        let minute = Math.floor(temp / 60);
+        let second = temp % 60;
+        chrono.innerHTML = `${minute}m:${second}s`;
+    }
+      
 };
 
 const start_chrono = () => {
-  inter = setInterval(update_chrono, 1000);
+    inter = setInterval(update_chrono, 1000);
 };
 
 const stop_chrono = () => {
-  clearInterval(inter);
+    clearInterval(inter);
 };
 
 // ========== WORD GENERATION ==========
@@ -188,7 +203,12 @@ const startTest = () => {
     
     wordsToType.length = 0;
     wordDisplay.innerHTML = "";
-    chrono.innerHTML = "00m:00s";
+    if(chronoSelect.value !== "-99"){
+        chrono.innerHTML = `00m:${chronoSelect.value}s`
+    }
+    else{
+        chrono.innerHTML = "00m:00s";
+    }
     currentWordIndex = 0;
     startTime = null;
     previousEndTime = null;
@@ -199,6 +219,7 @@ const startTest = () => {
     premier_appuie = false;
     inputField.value = "";
     results.textContent = "";
+    limit_temps = parseInt(chronoSelect.value);
 
     for (let i = 0; i < wordCount; i++) {
         wordsToType.push(getRandomWord(lang, level, useNumbers, usePunctuation));
@@ -209,7 +230,7 @@ const startTest = () => {
     
 
     wordsToType.forEach((word, index) => {
-        // atao variable le 10
+
         if(index < List_number) {
             const span = document.createElement("span");
             span.textContent = word + " ";
@@ -222,7 +243,6 @@ const startTest = () => {
 
 
 const update_wordDisplay = (index)=> {
-    // atao variable le 10
     new_word_display = range(wordsToType, index, index + List_number, 1)
     wordDisplay.innerHTML = "";
     new_word_display.forEach((word, index) => {
@@ -257,7 +277,7 @@ const updateWord = (event) => {
         
         currentWordIndex++;
         highlight_index ++;
-        // atao variable le 10
+
         if (currentWordIndex % List_number === 0 &&  currentWordIndex != wordsToType.length){
             update_wordDisplay(currentWordIndex)
             highlight_index = 0
@@ -269,11 +289,11 @@ const updateWord = (event) => {
         highlightNextWord(highlight_index);
         inputField.value = "";
         event.preventDefault();
-
+        console.log(chronoSelect.value, limit_temps)
         if (currentWordIndex === wordsToType.length) {
-        stop_chrono();
-        results.textContent = `WPM: ${Math.floor(accum_wpm / wordsToType.length)}, Accuracy: ${Math.floor(accum_accuracy / wordsToType.length)}%
-        , Errors: ${accum_error}/Correct: ${accum_correct}/Totale: ${accum_totale}`;
+            stop_chrono();
+            results.textContent = `WPM: ${Math.floor(accum_wpm / wordsToType.length)}, Accuracy: ${Math.floor(accum_accuracy / wordsToType.length)}%
+            , Errors: ${accum_error}/Correct: ${accum_correct}/Totale: ${accum_totale}`;
         }
     }
     
@@ -289,14 +309,13 @@ inputField.addEventListener("keydown", (event) => {
     }
     
     const typed = inputField.value
-    console.log(typed)
     if(isHardcore){
         for(let i = 0 ; i < typed.length ; i++){
             if(typed[i] != wordsToType[currentWordIndex][i]){
-            stop_chrono();
-            results.textContent = " Game Over - Hardcore mode";
-            inputField.disabled = true;
-            break;
+                stop_chrono();
+                results.textContent = "Game Over - Hardcore mode";
+                inputField.disabled = true;
+                break;
             }
         }
 
@@ -306,18 +325,8 @@ inputField.addEventListener("keydown", (event) => {
 
 //========== MINUTEUR ===========
 chronoSelect.addEventListener("change", () => {
-    const update_minuteur = () => {
-        const secd = times % 60
-        minuteur.innerHTML = `${secd}s`
-        times-- 
-        if(times < 0){
-            clearInterval(interval)
-        }
-    }
-    
-    const start_minuteur = () => {
-        interval = setInterval(update_minuteur, 1000)
-    }
+    startTest()
+    stop_chrono()
 });
 
 languageSelect.addEventListener("change", startTest);
@@ -330,6 +339,14 @@ hardcoreToggle.addEventListener("change", () => {
     inputField.disabled = false;
     startTest();
 });
+
+chrono.addEventListener("input", (event) => {
+    if (chronoSelect.value !== "-99" && limit_temps <= 0) {
+        stop_chrono();
+        results.textContent = `WPM: ${Math.floor(accum_wpm / wordsToType.length)}, Accuracy: ${Math.floor(accum_accuracy / wordsToType.length)}%
+        , Errors: ${accum_error}/Correct: ${accum_correct}/Totale: ${accum_totale}`;
+    }
+})
 
 
 // ========== INITIAL ==========

@@ -18,9 +18,10 @@
             <div class="select-group">
                 <label id="typing-options__label--chrono">⏱ chrono</label>
                     <select id="chrono-select">
+                        <option value="-99" selected>--</option>
                         <option value="15">15s</option>
                         <option value="30">30s</option>
-                        <option value="1">1mn</option>
+                        <option value="60">60s</option>
                     </select>
             </div>
             
@@ -76,7 +77,7 @@
             <p id="word-display"></p>
         </div>
         <div>
-            <p id="restant-display"></p>
+            <p id="restant-display">Rest of word:</p>
         </div>
         <div class="typing-zone">
             <input type="text" id="input-field" autofocus>
