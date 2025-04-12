@@ -119,6 +119,10 @@ body {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+.custom-settings__option input {
+  outline: none;
+}
+
 /* ------------pour l'identité de mon site [logo + nom]------------*/
 .site-identity h1 {
     color: white;
@@ -154,7 +158,7 @@ body {
   padding-top: 3%;
   box-sizing: border-box;
   text-align: left;
-  font-size: 20px;
+  font-size: 25px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -167,7 +171,6 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: -3%;
 }
 
 #input-field {
@@ -214,9 +217,21 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  margin-top: 2.5%;
 }
 
 .refresh i {
   color: #575757;
   font-size: 1.5rem;
+}
+
+/* --- mot restant à taper ---- */
+.restantDisplay {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: white;
+  margin-top: -2%;
 }

@@ -19,6 +19,7 @@ const restDisplay = document.getElementById("restant-display");
 const inputField = document.getElementById("input-field");
 const results = document.getElementById("results");
 const chrono = document.getElementById("chrono");
+const refresh = document.getElementById("refresh__icon")
 
 let restant = 0
 let highlight_index = 0;
@@ -31,7 +32,7 @@ let accum_accuracy = 0;
 let accum_error = 0;
 let accum_correct = 0;
 let accum_totale = 0;
-let List_number = 50;
+let List_number = 30;
 
 let startTime = null, previousEndTime = null;
 let currentWordIndex = 0;
@@ -67,9 +68,6 @@ punctuationToggle.addEventListener('change', () => {
 hardcoreToggle.addEventListener('change', () => {
     typingToggle3.classList.toggle('typing-options__toggle--pink');
 })
-
-
-
 
 
 // ========== DICTIONNAIRES ==========
