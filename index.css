@@ -162,6 +162,13 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.del{
+  display: block;
+}
+.del-none{
+  display: none;
+}
+
 .text {
   padding-block: 2%;
 }
@@ -188,6 +195,13 @@ body {
   color: white;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
+
+}
+.result-end{
+  display: flex;
+  justify-content: center;
+  margin-top: 6%;
+  font-size: 30px;
 }
 
 .result {
@@ -218,6 +232,10 @@ body {
   flex-direction: row;
   justify-content: center;
   margin-top: 2.5%;
+}
+.fa-rotate-right{
+  cursor: pointer;
+
 }
 
 .refresh i {
