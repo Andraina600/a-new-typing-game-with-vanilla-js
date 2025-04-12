@@ -12,11 +12,13 @@ const levelSelect = document.getElementById("level-select");
 const hardcoreToggle = document.getElementById("hardcore-toggle");
 const languageSelect = document.getElementById("language-select");
 const wordCountInput = document.querySelector('.custom-settings__option input');
+const del = document.querySelector('.not_resultat')
 
 const modeSelect = levelSelect;
 const wordDisplay = document.getElementById("word-display");
 const restDisplay = document.getElementById("restant-display");
 const inputField = document.getElementById("input-field");
+const result = document.querySelector('.result')
 const results = document.getElementById("results");
 const chrono = document.getElementById("chrono");
 
@@ -68,6 +70,7 @@ punctuationToggle.addEventListener('change', () => {
 hardcoreToggle.addEventListener('change', () => {
     typingToggle3.classList.toggle('typing-options__toggle--pink');
 })
+
 
 
 // ========== DICTIONNAIRES ==========
@@ -289,7 +292,9 @@ const updateWord = (event) => {
         console.log(chronoSelect.value, limit_temps)
         if (currentWordIndex === wordsToType.length) {
             stop_chrono();
-            results.textContent = `WPM: ${Math.floor(accum_wpm / wordsToType.length)}, Accuracy: ${Math.floor(accum_accuracy / wordsToType.length)}%
+            del.classList.toggle('del-none')
+            result.classList.toggle('result-end')
+            results.textContent = `WPM: ${Math.floor(accum_wpm / wordsToType.length)},Accuracy: ${Math.floor(accum_accuracy / wordsToType.length)}%
             , Errors: ${accum_error}/Correct: ${accum_correct}/Totale: ${accum_totale}`;
         }
     }
@@ -309,6 +314,8 @@ inputField.addEventListener("keydown", (event) => {
     if(isHardcore){
         for(let i = 0 ; i < typed.length ; i++){
             if(typed[i] != wordsToType[currentWordIndex][i]){
+                del.classList.toggle('del-none')
+                result.classList.toggle('result-end')
                 stop_chrono();
                 results.textContent = "Game Over - Hardcore mode";
                 inputField.disabled = true;
