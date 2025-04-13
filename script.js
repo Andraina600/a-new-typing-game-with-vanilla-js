@@ -113,6 +113,13 @@ const update_chrono = () => {
         let minute = Math.floor(temp / 60);
         let second = temp % 60;
         chrono.innerHTML = `${minute}m:${second}s`;
+        if(temp <= 0){
+            stop_chrono()
+            del.classList.toggle('del-none')
+            result.classList.toggle('result-end')
+            results.textContent = `WPM: ${Math.floor(accum_wpm / wordsToType.length)},  Accuracy: ${Math.floor(accum_accuracy / wordsToType.length)}%
+            ,  Errors: ${accum_error}/Correct: ${accum_correct}/Totale: ${accum_totale}`;
+        }
     }
       
 };
@@ -294,8 +301,8 @@ const updateWord = (event) => {
             stop_chrono();
             del.classList.toggle('del-none')
             result.classList.toggle('result-end')
-            results.textContent = `WPM: ${Math.floor(accum_wpm / wordsToType.length)},Accuracy: ${Math.floor(accum_accuracy / wordsToType.length)}%
-            , Errors: ${accum_error}/Correct: ${accum_correct}/Totale: ${accum_totale}`;
+            results.textContent = `WPM: ${Math.floor(accum_wpm / wordsToType.length)},  Accuracy: ${Math.floor(accum_accuracy / wordsToType.length)}%
+            ,  Errors: ${accum_error}/Correct: ${accum_correct}/Totale: ${accum_totale}`;
         }
     }
     
@@ -322,12 +329,11 @@ inputField.addEventListener("keydown", (event) => {
                 break;
             }
         }
-
     }
   updateWord(event);
 });
 
-//========== MINUTEUR =========== //
+
 chronoSelect.addEventListener("change", () => {
     startTest()
     stop_chrono()
@@ -344,13 +350,13 @@ hardcoreToggle.addEventListener("change", () => {
     startTest();
 });
 
-chrono.addEventListener("input", (event) => {
-    if (chronoSelect.value !== "-99" && limit_temps <= 0) {
-        stop_chrono();
-        results.textContent = `WPM: ${Math.floor(accum_wpm / wordsToType.length)}, Accuracy: ${Math.floor(accum_accuracy / wordsToType.length)}%
-        , Errors: ${accum_error}/Correct: ${accum_correct}/Totale: ${accum_totale}`;
-    }
-})
+// chrono.addEventListener("input", (event) => {
+//     if (chronoSelect.value !== "-99" && limit_temps <= 0) {
+//         stop_chrono();
+//         results.textContent = `WPM: ${Math.floor(accum_wpm / wordsToType.length)}, Accuracy: ${Math.floor(accum_accuracy / wordsToType.length)}%
+//         , Errors: ${accum_error}/Correct: ${accum_correct}/Totale: ${accum_totale}`;
+//     }
+// })
 
 
 // ========== INITIAL ==========
