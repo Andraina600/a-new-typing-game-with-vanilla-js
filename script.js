@@ -16,7 +16,7 @@ const del = document.querySelector('.not_resultat')
 
 const modeSelect = levelSelect;
 const wordDisplay = document.getElementById("word-display");
-const restDisplay = document.getElementById("restant-display");
+const restDisplay = document.querySelector(".restant-display");
 const inputField = document.getElementById("input-field");
 const result = document.querySelector('.result')
 const results = document.getElementById("results");
@@ -167,8 +167,8 @@ const fn_acc = () => {
          })
         sum_totale = correct + err
     }  
+    return [correct / sum_totale, err, correct, sum_totale]
     
-    return [correct / len_word, err, correct, sum_totale]
 }
 
 // ========== STATS ==========
@@ -349,15 +349,6 @@ hardcoreToggle.addEventListener("change", () => {
     inputField.disabled = false;
     startTest();
 });
-
-// chrono.addEventListener("input", (event) => {
-//     if (chronoSelect.value !== "-99" && limit_temps <= 0) {
-//         stop_chrono();
-//         results.textContent = `WPM: ${Math.floor(accum_wpm / wordsToType.length)}, Accuracy: ${Math.floor(accum_accuracy / wordsToType.length)}%
-//         , Errors: ${accum_error}/Correct: ${accum_correct}/Totale: ${accum_totale}`;
-//     }
-// })
-
 
 // ========== INITIAL ==========
 startTest();

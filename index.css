@@ -196,6 +196,8 @@ body {
   padding-left: 10px;
   outline: none;
   box-shadow: 10px 10px 8px rgb(25, 25, 25);
+  font-size: 17px;
+  font-weight: bold;
 }
 
 .chrono {
@@ -242,9 +244,30 @@ body {
   flex-direction: row;
   justify-content: center;
 }
+.refresh__btn{
+  position: relative;
+}
+.refresh__btn::after{
+  content: attr(data-refresh__btn);
+  position: absolute;
+  bottom: -150%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color:#4a4a4a;
+  color: #ffe4f4;
+  padding: 8px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+  font-size: 15px;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.2s ease;
+}
+.refresh__btn:hover::after{
+  opacity: 1;
+}
 .fa-rotate-right{
   cursor: pointer;
-
 }
 
 .refresh i {
@@ -261,4 +284,29 @@ body {
   font-size: 1.5rem;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: white;
+}
+.restant-display{
+  cursor: pointer;
+  position: relative;
+}
+
+.restant-display::after{
+  content: attr(data-restant__display);
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color:#4a4a4a;
+  color: #ffe4f4;
+  padding: 8px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+  font-size: 15px;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.2s ease;
+}
+
+.restant-display:hover::after{
+  opacity: 1;
 }
