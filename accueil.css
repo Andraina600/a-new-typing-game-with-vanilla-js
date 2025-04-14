@@ -53,6 +53,7 @@ body {
     color: white;
     font-family: 'Actor', sans-serif;
     text-shadow: 10px 10px 10px rgb(0, 0, 0);
+    line-height: 1.6;
 }
   
 button {
