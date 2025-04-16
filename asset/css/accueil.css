@@ -20,7 +20,7 @@ body {
     position: absolute;
     inset: 0;
     z-index: -1;
-    background-image: url("images/gaming_keyboard-1.jpg");
+    background-image: url("../images/gaming_keyboard-1.jpg");
     background-size: cover;
     background-position: center;
     transform: scaleX(-1); 

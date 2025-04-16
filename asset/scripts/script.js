@@ -40,16 +40,6 @@ let startTime = null, previousEndTime = null;
 let currentWordIndex = 0;
 let wordsToType = [];
 
-
-function range(list, start, end, step = 1) {
-    const result = [];
-    for (let i = start; i < end; i += step) {
-        result.push(list[i]);
-    }
-    return result;
-}
-  
-
 // ========== TOGGLE MENU ==========
 customButton.addEventListener('click', () => {
   customMenu.classList.toggle('hidden');
@@ -383,6 +373,16 @@ const highlightNextWord = (index) => {
     }
 };
 
+// ========== RANGE FUNCTION =============
+const range = (list, start, end, step = 1) => {
+    const result = [];
+    for (let i = start; i < end; i += step) {
+        result.push(list[i]);
+    }
+    return result;
+}
+   
+
 
 // ========== TEST INIT ==========
 const startTest = () => {
@@ -486,8 +486,7 @@ const updateWord = (event) => {
             stop_chrono();
             del.classList.toggle('del-none')
             result.classList.toggle('result-end')
-            results.textContent = `WPM: ${Math.floor(accum_wpm / wordsToType.length)},  Accuracy: ${Math.floor(accum_accuracy / wordsToType.length)}%
-            ,  Errors: ${accum_error}/Correct: ${accum_correct}/Totale: ${accum_totale}`;
+            results.textContent = `WPM: ${Math.floor(accum_wpm / wordsToType.length)},  Accuracy: ${Math.floor(accum_accuracy / wordsToType.length)}%,  Errors: ${accum_error}/Correct: ${accum_correct}/Totale: ${accum_totale}`;
         }
     }
     
